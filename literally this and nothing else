@@ -1,0 +1,866 @@
+import pickle
+import os
+import time
+MISTAKE_COUNT = 0
+CHEM_FILE = "chemistry_apparatus.dat"
+PHYSICS_FILE = "physics_apparatus.dat"
+def opening_menu():
+    print("\n" * 5)
+    print("=" * 60)
+    print("+" * 60)
+    print("|" + " " * 58 + "|")
+    print("|" + " " * 10 + "SANBIS LAB INVENTORY MANAGEMENT SYSTEM" + " " * 10 + "|")
+    print("|" + " " * 58 + "|")
+    print("+" * 60)
+    print("=" * 60)
+    print("\n" * 2)
+def setup_initial_passwords():
+    if not os.path.exists("Adminpassword.txt"):
+        Admin_pass=open("Adminpassword.txt","w")
+        Admin_pass.write("Admin")
+        Admin_pass.close()
+    if not os.path.exists("Userpassword.txt"):
+        User_pass=open("Userpassword.txt","w")
+        User_pass.write("User")
+        User_pass.close()
+
+def main():
+    import pickle
+    import os
+    setup_initial_passwords()
+    while True:
+        x=password()
+        if x.lower()=="admin":
+            lab_selection("admin")
+        elif x.lower()=="user":
+            lab_selection("user")
+        else:
+            print("\n--- AUTHENTICATION FAILED ---\n")
+
+def lab_selection(role):
+    while True:
+        print("\n" + "*" * 40)
+        print("*" + " " * 10 + "LAB SELECTION MENU" + " " * 10 + "*")
+        print("*" * 40)
+        print("1. Chemistry Lab")
+        print("2. Physics Lab")
+        print("3. Log out")
+        print("-" * 40)
+        choice = input("Enter your choice (1-3): ")
+        
+        if choice == '1':
+            if role == "admin":
+                Admin_menu_chemistry()
+            else:
+                User_menu_chemistry()
+        elif choice == '2':
+            if role == "admin":
+                Admin_menu_physics()
+            else:
+                User_menu_physics()
+        elif choice == '3':
+            print("\n" + "=" * 40)
+            print("Successfully logged out. Goodbye!")
+            print("=" * 40)
+            break
+        else:
+            print("\n" + "!" * 40)
+            print("Invalid choice. Please select 1, 2, or 3.")
+            print("!" * 40)
+
+def User_menu_chemistry():
+    while True:
+        print("\n" + "*" * 40)
+        print("*" + " " * 6 + "CHEMISTRY USER MENU" + " " * 14 + "*")
+        print("*" * 40)
+        print("1. Display All Records")
+        print("2. Search Record by Name")
+        print("3. Check Restock Warnings")
+        print("4. Update Quantity Only")
+        print("5. Change Password")
+        print("6. Sort Records by Name")
+        print("7. Exit")
+        print("-" * 40)
+        ch=input("Enter your choice (1-7): ")
+        if ch=='1':
+            display_apparatus()
+        elif ch=='2':
+            search_apparatus()
+        elif ch=='3':
+            check_restock()
+        elif ch=='4':
+            update_Quantity()
+        elif ch=='5':
+            change_password()
+        elif ch=='6':
+            sort_apparatus()
+        elif ch=='7':
+            break
+        else:
+            print("\n-- Invalid Menu Choice --")
+            
+def Admin_menu_chemistry():
+    while True:
+        print("\n" + "*" * 40)
+        print("*" + " " * 6 + "CHEMISTRY ADMIN MENU" + " " * 13 + "*")
+        print("*" * 40)
+        print(" 1. Add New Records")
+        print(" 2. Display All Records")
+        print(" 3. Search Record by Name")
+        print(" 4. Update Quantity Only")
+        print(" 5. Delete Record")
+        print(" 6. Append Records")
+        print(" 7. Update All Record Details")
+        print(" 8. List All Chemicals")
+        print(" 9. Check Restock Warnings")
+        print("10. Sort Records by Name")
+        print("11. Change Password")
+        print("12. Log out / Exit")
+        print("-" * 40)
+        choice =input("Enter choice (1-12): ")
+        if choice == "1":
+            add_apparatus()
+        elif choice == "2":
+            display_apparatus()
+        elif choice == "3":
+            search_apparatus()
+        elif choice == "4":
+            update_Quantity()
+        elif choice == "5":
+            delete_apparatus()
+        elif choice == "6":
+            append_apparatus()
+        elif choice == "7":
+            update_apparatus()
+        elif choice == "8":
+            list_chemicals()
+        elif choice == "9":
+            check_restock()
+        elif choice == "10":
+            sort_apparatus()
+        elif choice == "11":
+            change_password()
+        elif choice== '12':
+            break
+        else:
+            print("\n-- Invalid Menu Choice --")
+
+def User_menu_physics():
+    while True:
+        print("\n" + "*" * 40)
+        print("*" + " " * 8 + "PHYSICS USER MENU" + " " * 15 + "*")
+        print("*" * 40)
+        print("1. Display All Records")
+        print("2. Search Record by Name")
+        print("3. Check Restock Warnings")
+        print("4. Update Quantity Only")
+        print("5. Change Password")
+        print("6. Sort Records by Name")
+        print("7. Exit")
+        print("-" * 40)
+        ch=input("Enter your choice (1-7): ")
+        if ch=='1':
+            display_apparatus_physics()
+        elif ch=='2':
+            search_apparatus_physics()
+        elif ch=='3':
+            check_restock_physics()
+        elif ch=='4':
+            update_Quantity_physics()
+        elif ch=='5':
+            change_password()
+        elif ch=='6':
+            sort_apparatus_physics()
+        elif ch=='7':
+            break
+        else:
+            print("\n-- Invalid Menu Choice --")
+
+def Admin_menu_physics():
+    while True:
+        print("\n" + "*" * 40)
+        print("*" + " " * 7 + "PHYSICS ADMIN MENU" + " " * 14 + "*")
+        print("*" * 40)
+        print(" 1. Add New Records")
+        print(" 2. Display All Records")
+        print(" 3. Search Record by Name")
+        print(" 4. Update Quantity Only")
+        print(" 5. Delete Record")
+        print(" 6. Append Records")
+        print(" 7. Update All Record Details")
+        print(" 8. Check Restock Warnings")
+        print(" 9. Sort Records by Name")
+        print("10. Change Password")
+        print("11. Log out / Exit")
+        print("-" * 40)
+        choice =input("Enter choice (1-11): ")
+        if choice == "1":
+            add_apparatus_physics()
+        elif choice == "2":
+            display_apparatus_physics()
+        elif choice == "3":
+            search_apparatus_physics()
+        elif choice == "4":
+            update_Quantity_physics()
+        elif choice == "5":
+            delete_apparatus_physics()
+        elif choice == "6":
+            append_apparatus_physics()
+        elif choice == "7":
+            update_apparatus_physics()
+        elif choice == "8":
+            check_restock_physics()
+        elif choice == "9":
+            sort_apparatus_physics()
+        elif choice == "10":
+            change_password()
+        elif choice== '11':
+            break
+        else:
+            print("\n-- Invalid Menu Choice --")
+
+def add_apparatus():
+    l=[]
+    f=open(CHEM_FILE,"wb")
+    print("\n--- ADD CHEMISTRY APPARATUS ---")
+    while True:
+        try:
+            n=int(input("Enter the number records to be added: "))
+            break
+        except ValueError:
+            print("!! Invalid input. Please enter a whole number. !!")
+            
+    for i in range(n):
+        print("\n--- Record {} ---".format(i+1))
+        name=input("Enter the name of the apparatus: ")
+        Type=input("Enter type (equipment/chemical): ")
+        
+        while True:
+            try:
+                Quantity=int(input("Enter the quantity: "))
+                break
+            except ValueError:
+                print("!! Invalid input. Please enter a whole number for quantity. !!")
+                
+        Date=input("Enter the date of purchase (dd/mm/yyyy): ")
+        
+        while True:
+            try:
+                Threshold=int(input("Enter the restock Threshold: "))
+                break
+            except ValueError:
+                print("!! Invalid input. Please enter a whole number for threshold. !!")
+                
+        print("-" * 25)
+        l=[name,Type,Quantity,Date,Threshold]
+        pickle.dump(l,f)
+    f.close()
+    print("\n--- Records added successfully! ---")
+
+def add_apparatus_physics():
+    l=[]
+    f=open(PHYSICS_FILE,"wb")
+    print("\n--- ADD PHYSICS APPARATUS ---")
+    while True:
+        try:
+            n=int(input("Enter the number records to be added: "))
+            break
+        except ValueError:
+            print("!! Invalid input. Please enter a whole number. !!")
+            
+    for i in range(n):
+        print("\n--- Record {} ---".format(i+1))
+        name=input("Enter the name of the apparatus: ")
+        Type="equipment"
+        print("Type set to: equipment")
+        
+        while True:
+            try:
+                Quantity=int(input("Enter the quantity: "))
+                break
+            except ValueError:
+                print("!! Invalid input. Please enter a whole number for quantity. !!")
+                
+        Date=input("Enter the date of purchase (dd/mm/yyyy): ")
+        
+        while True:
+            try:
+                Threshold=int(input("Enter the restock Threshold: "))
+                break
+            except ValueError:
+                print("!! Invalid input. Please enter a whole number for threshold. !!")
+                
+        print("-" * 25)
+        l=[name,Type,Quantity,Date,Threshold]
+        pickle.dump(l,f)
+    f.close()
+    print("\n--- Records added successfully! ---")
+
+def display_apparatus():
+    f=open(CHEM_FILE,'rb')
+    print("\n" + "=" * 80)
+    print(" " * 28 + "CHEMISTRY APPARATUS RECORDS")
+    print("=" * 80)
+    print("{:<20} {:<15} {:<10} {:<15} {:<10}".format("NAME", "TYPE", "QTY", "DATE", "THRESHOLD"))
+    print("-" * 80)
+    try:
+        while True:
+            l=pickle.load(f)
+            print("{:<20} {:<15} {:<10} {:<15} {:<10}".format(l[0], l[1], l[2], l[3], l[4]))
+    except EOFError:
+        f.close()
+    print("=" * 80 + "\n")
+
+def display_apparatus_physics():
+    f=open(PHYSICS_FILE,'rb')
+    print("\n" + "=" * 80)
+    print(" " * 29 + "PHYSICS APPARATUS RECORDS")
+    print("=" * 80)
+    print("{:<20} {:<15} {:<10} {:<15} {:<10}".format("NAME", "TYPE", "QTY", "DATE", "THRESHOLD"))
+    print("-" * 80)
+    try:
+        while True:
+            l=pickle.load(f)
+            print("{:<20} {:<15} {:<10} {:<15} {:<10}".format(l[0], l[1], l[2], l[3], l[4]))
+    except EOFError:
+        f.close()
+    print("=" * 80 + "\n")
+
+def search_apparatus():
+    f=open(CHEM_FILE,'rb')
+    r=input("\nEnter the name of apparatus to be searched: ")
+    flag=0
+    print("\n--- SEARCH RESULTS ---")
+    try:
+        while True:
+            l=pickle.load(f)
+            if r.lower()==l[0].lower():
+                print("=" * 60)
+                print("{:<20} {:<15} {:<10} {:<15} {:<10}".format("NAME", "TYPE", "QTY", "DATE", "THRESHOLD"))
+                print("-" * 60)
+                print("{:<20} {:<15} {:<10} {:<15} {:<10}".format(l[0], l[1], l[2], l[3], l[4]))
+                print("=" * 60)
+                flag=1
+    except EOFError:
+        f.close()
+        if flag==0:
+            print("Apparatus '{}' not found in Chemistry records.".format(r))
+        print("----------------------\n")
+
+def search_apparatus_physics():
+    f=open(PHYSICS_FILE,'rb')
+    r=input("\nEnter the name of apparatus to be searched: ")
+    flag=0
+    print("\n--- SEARCH RESULTS ---")
+    try:
+        while True:
+            l=pickle.load(f)
+            if r.lower()==l[0].lower():
+                print("=" * 60)
+                print("{:<20} {:<15} {:<10} {:<15} {:<10}".format("NAME", "TYPE", "QTY", "DATE", "THRESHOLD"))
+                print("-" * 60)
+                print("{:<20} {:<15} {:<10} {:<15} {:<10}".format(l[0], l[1], l[2], l[3], l[4]))
+                print("=" * 60)
+                flag=1
+    except EOFError:
+        f.close()
+        if flag==0:
+            print("Apparatus '{}' not found in Physics records.".format(r))
+        print("----------------------\n")
+
+def update_Quantity():
+    fr=open(CHEM_FILE,"rb")
+    fw=open("temp.dat","wb")
+    flag=0
+    r=input("Enter the apparatus name to modify Quantity: ")
+    try:
+        while True:
+            d=pickle.load(fr)
+            if d[0].lower()==r.lower():
+                print("\n--- Current Quantity: {} ---".format(d[2]))
+                while True:
+                    try:
+                        d[2]=int(input("Enter NEW Quantity: "))
+                        break
+                    except ValueError:
+                        print("!! Invalid input. Please enter a whole number. !!")
+                flag=1
+            pickle.dump(d,fw)
+    except EOFError:
+        fr.close()
+        fw.close()
+        if flag==1:
+            print("\n--- Quantity for '{}' successfully modified! ---".format(r))
+            os.remove(CHEM_FILE)
+            os.rename("temp.dat",CHEM_FILE)
+        else:
+            print("\n--- Apparatus '{}' not found. ---".format(r))
+
+def update_Quantity_physics():
+    fr=open(PHYSICS_FILE,"rb")
+    fw=open("temp.dat","wb")
+    flag=0
+    r=input("Enter the apparatus name to modify Quantity: ")
+    try:
+        while True:
+            d=pickle.load(fr)
+            if d[0].lower()==r.lower():
+                print("\n--- Current Quantity: {} ---".format(d[2]))
+                while True:
+                    try:
+                        d[2]=int(input("Enter NEW Quantity: "))
+                        break
+                    except ValueError:
+                        print("!! Invalid input. Please enter a whole number. !!")
+                flag=1
+            pickle.dump(d,fw)
+    except EOFError:
+        fr.close()
+        fw.close()
+        if flag==1:
+            print("\n--- Quantity for '{}' successfully modified! ---".format(r))
+            os.remove(PHYSICS_FILE)
+            os.rename("temp.dat",PHYSICS_FILE)
+        else:
+            print("\n--- Apparatus '{}' not found. ---".format(r))
+
+def update_apparatus():
+    fr=open(CHEM_FILE,"rb")
+    fw=open("temp.dat","wb")
+    flag=0
+    r=input("Enter the apparatus name to modify ALL DETAILS: ")
+    try:
+        while True:
+            d=pickle.load(fr)
+            if d[0].lower()==r.lower():
+                print("\n--- Updating Record for '{}' ---".format(r))
+                while True:
+                    try:
+                        d[2]=int(input("Enter NEW Quantity (Current: {}): ".format(d[2])))
+                        break
+                    except ValueError:
+                        print("!! Invalid input. Please enter a whole number. !!")
+                        
+                d[3]=input("Enter NEW Date (Current: {}): ".format(d[3]))
+                
+                while True:
+                    try:
+                        d[4]=int(input("Enter NEW Threshold (Current: {}): ".format(d[4])))
+                        break
+                    except ValueError:
+                        print("!! Invalid input. Please enter a whole number. !!")
+                flag=1
+            pickle.dump(d,fw)
+    except EOFError:
+        fr.close()
+        fw.close()
+        if flag==1:
+            print("\n--- Record for '{}' successfully modified! ---".format(r))
+            os.remove(CHEM_FILE)
+            os.rename("temp.dat",CHEM_FILE)
+        else:
+            print("\n--- Apparatus '{}' not found. ---".format(r))
+
+def update_apparatus_physics():
+    fr=open(PHYSICS_FILE,"rb")
+    fw=open("temp.dat","wb")
+    flag=0
+    r=input("Enter the apparatus name to modify ALL DETAILS: ")
+    try:
+        while True:
+            d=pickle.load(fr)
+            if d[0].lower()==r.lower():
+                print("\n--- Updating Record for '{}' ---".format(r))
+                while True:
+                    try:
+                        d[2]=int(input("Enter NEW Quantity (Current: {}): ".format(d[2])))
+                        break
+                    except ValueError:
+                        print("!! Invalid input. Please enter a whole number. !!")
+                        
+                d[3]=input("Enter NEW Date (Current: {}): ".format(d[3]))
+                
+                while True:
+                    try:
+                        d[4]=int(input("Enter NEW Threshold (Current: {}): ".format(d[4])))
+                        break
+                    except ValueError:
+                        print("!! Invalid input. Please enter a whole number. !!")
+                flag=1
+            pickle.dump(d,fw)
+    except EOFError:
+        fr.close()
+        fw.close()
+        if flag==1:
+            print("\n--- Record for '{}' successfully modified! ---".format(r))
+            os.remove(PHYSICS_FILE)
+            os.rename("temp.dat",PHYSICS_FILE)
+        else:
+            print("\n--- Apparatus '{}' not found. ---".format(r))
+
+def delete_apparatus():
+    fr=open(CHEM_FILE,"rb")
+    fw=open("temp.dat","wb")
+    flag=0
+    r=input("Enter the apparatus name to DELETE: ")
+    try:
+        while True:
+            d=pickle.load(fr)
+            if d[0].lower()==r.lower():
+                flag=1
+                print("--- Apparatus '{}' found and marked for deletion. ---".format(r))
+            else:
+                pickle.dump(d,fw)
+    except EOFError:
+        fr.close()
+        fw.close()
+        if flag==1:
+            print("\n--- Record for '{}' successfully deleted! ---".format(r))
+            os.remove(CHEM_FILE)
+            os.rename("temp.dat",CHEM_FILE)
+        else:
+            print("\n--- Apparatus '{}' not found. No records deleted. ---".format(r))
+
+def delete_apparatus_physics():
+    fr=open(PHYSICS_FILE,"rb")
+    fw=open("temp.dat","wb")
+    flag=0
+    r=input("Enter the apparatus name to DELETE: ")
+    try:
+        while True:
+            d=pickle.load(fr)
+            if d[0].lower()==r.lower():
+                flag=1
+                print("--- Apparatus '{}' found and marked for deletion. ---".format(r))
+            else:
+                pickle.dump(d,fw)
+    except EOFError:
+        fr.close()
+        fw.close()
+        if flag==1:
+            print("\n--- Record for '{}' successfully deleted! ---".format(r))
+            os.remove(PHYSICS_FILE)
+            os.rename("temp.dat",PHYSICS_FILE)
+        else:
+            print("\n--- Apparatus '{}' not found. No records deleted. ---".format(r))
+
+def append_apparatus():
+    l=[]
+    f=open(CHEM_FILE,"ab")
+    print("\n--- APPEND CHEMISTRY APPARATUS ---")
+    while True:
+        try:
+            n=int(input("Enter the number records to be appended: "))
+            break
+        except ValueError:
+            print("!! Invalid input. Please enter a whole number. !!")
+            
+    for i in range(n):
+        print("\n--- New Record {} ---".format(i+1))
+        name=input("Enter the name of the apparatus: ")
+        Type=input("Enter type (equipment/chemical): ")
+        
+        while True:
+            try:
+                Quantity=int(input("Enter the quantity: "))
+                break
+            except ValueError:
+                print("!! Invalid input. Please enter a whole number for quantity. !!")
+                
+        Date=input("Enter the date of purchase (dd/mm/yyyy): ")
+        
+        while True:
+            try:
+                Threshold=int(input("Enter the restock Threshold: "))
+                break
+            except ValueError:
+                print("!! Invalid input. Please enter a whole number for threshold. !!")
+                
+        print("-" * 25)
+        l=[name,Type,Quantity,Date,Threshold]
+        pickle.dump(l,f)
+    f.close()
+    print("\n--- Records appended successfully! ---")
+
+def append_apparatus_physics():
+    l=[]
+    f=open(PHYSICS_FILE,"ab")
+    print("\n--- APPEND PHYSICS APPARATUS ---")
+    while True:
+        try:
+            n=int(input("Enter the number records to be appended: "))
+            break
+        except ValueError:
+            print("!! Invalid input. Please enter a whole number. !!")
+            
+    for i in range(n):
+        print("\n--- New Record {} ---".format(i+1))
+        name=input("Enter the name of the apparatus: ")
+        Type="equipment"
+        print("Type set to: equipment")
+        
+        while True:
+            try:
+                Quantity=int(input("Enter the quantity: "))
+                break
+            except ValueError:
+                print("!! Invalid input. Please enter a whole number for quantity. !!")
+                
+        Date=input("Enter the date of purchase (dd/mm/yyyy): ")
+        
+        while True:
+            try:
+                Threshold=int(input("Enter the restock Threshold: "))
+                break
+            except ValueError:
+                print("!! Invalid input. Please enter a whole number for threshold. !!")
+                
+        print("-" * 25)
+        l=[name,Type,Quantity,Date,Threshold]
+        pickle.dump(l,f)
+    f.close()
+    print("\n--- Records appended successfully! ---")
+
+def list_chemicals():
+    f=open(CHEM_FILE,'rb')
+    flag=0
+    print("\n" + "=" * 60)
+    print(" " * 18 + "LIST OF CHEMICALS")
+    print("=" * 60)
+    try:
+        while True:
+            l=pickle.load(f)
+            if "chemical"==l[1].lower():
+                print("{:<20} | {:<10} | {:<10} {}".format(l[0], l[2], l[3], unit(l[1])))
+                flag=1
+    except EOFError:
+        f.close()
+        print("-" * 60)
+        if flag==0:
+            print("No chemicals found in the database.")
+        else:
+            print("Total chemicals listed above.")
+        print("=" * 60 + "\n")
+            
+def sort_apparatus():
+    f1=open(CHEM_FILE,"rb")
+    fw=open("temp.dat","wb")
+    name_list=[]
+    try:
+        while True:
+            l=pickle.load(f1)
+            name_list.append(l[0])
+    except EOFError:
+        f1.close()
+    name_list.sort()
+    for name in name_list:
+        try:
+            fr=open(CHEM_FILE,"rb")
+            while True:
+                l=pickle.load(fr)
+                if name==l[0]:
+                    pickle.dump(l,fw)
+        except EOFError:
+            fr.close()
+    fw.close()
+    os.remove(CHEM_FILE)
+    os.rename("temp.dat",CHEM_FILE)
+    print("\n--- Chemistry apparatus records sorted by Name. ---")
+
+def sort_apparatus_physics():
+    f1=open(PHYSICS_FILE,"rb")
+    fw=open("temp.dat","wb")
+    name_list=[]
+    try:
+        while True:
+            l=pickle.load(f1)
+            name_list.append(l[0])
+    except EOFError:
+        f1.close()
+    name_list.sort()
+    for name in name_list:
+        try:
+            fr=open(PHYSICS_FILE,"rb")
+            while True:
+                l=pickle.load(fr)
+                if name==l[0]:
+                    pickle.dump(l,fw)
+        except EOFError:
+            fr.close()
+    fw.close()
+    os.remove(PHYSICS_FILE)
+    os.rename("temp.dat",PHYSICS_FILE)
+    print("\n--- Physics apparatus records sorted by Name. ---")
+
+def check_restock():
+    f=open(CHEM_FILE,'rb')
+    warnings=0
+    print("\n" + "#" * 50)
+    print(" " * 18 + "RESTOCK CHECK (CHEMISTRY)")
+    print("#" * 50)
+    try:
+        while True:
+            l=pickle.load(f)
+            if l[2]<l[4]:
+                print("!! WARNING !! {:<20} is running out of stock! Only {} {} left (Threshold: {})".format(l[0], l[2], unit(l[1]), l[4]))
+                warnings+=1
+    except EOFError:
+        f.close()
+        print("#" * 50)
+        if warnings==0:
+            print("All apparatus in adequate amounts.")
+        else:
+            print("{} WARNING(S) found.".format(warnings))
+        print("#" * 50 + "\n")
+
+def check_restock_physics():
+    f=open(PHYSICS_FILE,'rb')
+    warnings=0
+    print("\n" + "#" * 50)
+    print(" " * 18 + "RESTOCK CHECK (PHYSICS)")
+    print("#" * 50)
+    try:
+        while True:
+            l=pickle.load(f)
+            if l[2]<l[4]:
+                print("!! WARNING !! {:<20} is running out of stock! Only {} {} left (Threshold: {})".format(l[0], l[2], unit(l[1]), l[4]))
+                warnings+=1
+    except EOFError:
+        f.close()
+        print("#" * 50)
+        if warnings==0:
+            print("All apparatus in adequate amounts.")
+        else:
+            print("{} WARNING(S) found.".format(warnings))
+        print("#" * 50 + "\n")
+
+def unit(Type):
+    if Type.lower()=="equipment" or Type.lower()=="apparatus":
+        return "Nos."
+    elif Type.lower()=="chemical":
+        return "Litres"
+
+def password():
+    global MISTAKE_COUNT
+    Admin_password=open_password_Admin()
+    User_password=open_password_User()
+    
+    print("\n" + "=" * 40)
+    print("=" + " " * 14 + "LOGIN SCREEN" + " " * 14 + "=")
+    print("=" * 40)
+    role=input("Enter Role (ADMIN/USER): ")
+    Password_input=input("Enter Password: ")
+    if role.lower()=='admin':
+        if Password_input==Admin_password:
+            print("\n" + "#" * 40)
+            print("Signed in as ADMIN successfully!")
+            print("#" * 40)
+            MISTAKE_COUNT=0
+            return "admin"
+        else:
+            print("\n" + "!" * 40)
+            print("Access denied. Invalid Credentials.")
+            print("!" * 40)
+            MISTAKE_COUNT+=1
+            if MISTAKE_COUNT==3:
+                print("Too many failed attempts. Waiting 30 seconds.")
+                time.sleep(30)
+            elif MISTAKE_COUNT>3:
+                delay = 30*(MISTAKE_COUNT-3)
+                print("Too many failed attempts. Waiting {} seconds.".format(delay))
+                time.sleep(delay)
+            return 'False'
+    if role.lower()=='user':
+        if Password_input==User_password:
+            print("\n" + "#" * 40)
+            print("Signed in as USER successfully!")
+            print("#" * 40)
+            MISTAKE_COUNT=0
+            return "user"
+        else:
+            print("\n" + "!" * 40)
+            print("Access denied. Invalid Credentials.")
+            print("!" * 40)
+            return 'False'
+
+def change_password():
+    global MISTAKE_COUNT
+    while True:
+        print("\n" + "~" * 40)
+        print("~" + " " * 10 + "CHANGE PASSWORD" + " " * 11 + "~")
+        print("~" * 40)
+        Admin_password=open_password_Admin()
+        User_password=open_password_User()
+        role=input("Enter Role (ADMIN/USER): ")
+        Password_input=input("Enter Old Password: ")
+        New_password=input("Enter New Password: ")
+        
+        if role.lower()=='admin':
+            if Password_input==Admin_password:
+                if New_password==Admin_password:
+                    print("\n!! New password cannot be the old password. !!")
+                    continue
+                else:
+                    save_password_admin(New_password)
+                    print("\n--- Admin Password successfully changed! ---")
+                    MISTAKE_COUNT=0
+                    break
+            else:
+                print("\n! Access denied. Old Password Incorrect. !")
+                MISTAKE_COUNT+=1
+                if MISTAKE_COUNT==3:
+                    print("Too many failed attempts. Waiting 30 seconds.")
+                    time.sleep(30)
+                elif MISTAKE_COUNT>3:
+                    delay = 30*(MISTAKE_COUNT-3)
+                    print("Too many failed attempts. Waiting {} seconds.".format(delay))
+                    time.sleep(delay)
+                continue
+                
+        elif role.lower()=='user':
+            if Password_input==User_password:
+                if New_password==User_password:
+                    print("\n!! New password cannot be the old password. !!")
+                    continue
+                else:
+                    save_password_user(New_password)
+                    print("\n--- User Password successfully changed! ---")
+                    MISTAKE_COUNT=0
+                    break
+            else:
+                print("\n! Access denied. Old Password Incorrect. !")
+                MISTAKE_COUNT+=1
+                if MISTAKE_COUNT==3:
+                    time.sleep(30)
+                elif MISTAKE_COUNT>3:
+                    delay = 30*(MISTAKE_COUNT-3)
+                    print("Too many failed attempts. Waiting {} seconds.".format(delay))
+                    time.sleep(delay)
+                continue
+        else:
+             print("\n!! Invalid role. Please enter ADMIN or USER. !!")
+
+
+def open_password_Admin():
+    Admin_pass=open("Adminpassword.txt","r")
+    password=Admin_pass.read()
+    Admin_pass.close()
+    return password
+
+def open_password_User():
+    User_pass=open("Userpassword.txt","r")
+    password=User_pass.read()
+    User_pass.close()
+    return password
+
+def save_password_admin(newpassword):
+    Admin_pass=open("Adminpassword.txt","w")
+    Admin_pass.write(newpassword)
+    Admin_pass.close()
+
+def save_password_user(newpassword):
+    User_pass=open("Userpassword.txt","w")
+    User_pass.write(newpassword)
+    User_pass.close()
+opening_menu()
+main()
