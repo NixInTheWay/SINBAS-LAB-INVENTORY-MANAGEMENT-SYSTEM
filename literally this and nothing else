@@ -81,7 +81,7 @@ def lab_selection(role):
             break
         else:
             print("\n" + "!" * 40)
-            print("Invalid choice. Please select 1, 2, or 3.")
+            print("Invalid choice. Please select 1, 2, 3, or 4.")
             print("!" * 40)
 
 def User_menu_chemistry():
@@ -354,12 +354,12 @@ def display_apparatus(FILE):
     print("\n" + "=" * 80)
     print(" " * 28 + f"{Lab_Type} APPARATUS RECORDS")
     print("=" * 80)
-    print("NAME", "TYPE", "QTY", "DATE", "THRESHOLD")
+    print("NAME","\t", "TYPE","\t", "QTY","\t", "DATE","\t", "THRESHOLD")
     print("-" * 80)
     try:
         while True:
             l=pickle.load(f)
-            print(l[0], l[1], l[2], l[3], l[4])
+            print(l[0],"\t", l[1],"\t", l[2],"\t", l[3],"\t", l[4])
     except FileNotFoundError:
         print(f"--- No records file found for the {Lab_Type.capitalize()} lab. Please add records first. ---")
     except EOFError:
@@ -377,9 +377,9 @@ def search_apparatus(FILE):
             l=pickle.load(f)
             if r.lower()==l[0].lower():
                 print("=" * 60)
-                print(""NAME", "TYPE", "QTY", "DATE", "THRESHOLD")
+                print(""NAME","\t", "TYPE","\t", "QTY","\t", "DATE","\t", "THRESHOLD")
                 print("-" * 60)
-                print(l[0], l[1], l[2], l[3], l[4])
+                print(l[0],"\t", l[1],"\t", l[2],"\t", l[3],"\t", l[4])
                 print("=" * 60)
                 flag=1
     except FileNotFoundError:
@@ -538,7 +538,7 @@ def list_chemicals(FILE):
         while True:
             l=pickle.load(f)
             if "chemical"==l[1].lower():
-                print(l[0], l[2], l[3], unit(l[1]))
+                print(l[0],"\t", l[2],"\t", l[3],"\t", unit(l[1]))
                 flag=1
     except FileNotFoundError:
         print(f"--- No records file found for the {Lab_Type.capitalize()} lab. Please add records first. ---")
