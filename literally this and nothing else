@@ -4,6 +4,12 @@ import time
 MISTAKE_COUNT = 0
 CHEM_FILE = "chemistry_apparatus.dat"
 PHYSICS_FILE = "physics_apparatus.dat"
+def Lab_name(FILE_NAME):
+    if FILE_NAME==CHEM_FILE:
+        LAB_TYPE="CHEMISTRY"
+    elif FILE_NAME==PHYSICS_NAME:
+        LAB_TYPE="PHYSICS"
+    return LAB_TYPE
 def opening_menu():
     print("\n" * 5)
     print("=" * 60)
@@ -257,49 +263,10 @@ def add_apparatus(FILE):
     f.close()
     print("\n--- Records added successfully! ---")
 
-'''def add_apparatus_physics():
-    l=[]
-    f=open(PHYSICS_FILE,"wb")
-    print("\n--- ADD PHYSICS APPARATUS ---")
-    while True:
-        try:
-            n=int(input("Enter the number records to be added: "))
-            break
-        except ValueError:
-            print("!! Invalid input. Please enter a whole number. !!")
-            
-    for i in range(n):
-        print("\n--- Record {} ---".format(i+1))
-        name=input("Enter the name of the apparatus: ")
-        Type="equipment"
-        print("Type set to: equipment")
-        
-        while True:
-            try:
-                Quantity=int(input("Enter the quantity: "))
-                break
-            except ValueError:
-                print("!! Invalid input. Please enter a whole number for quantity. !!")
-                
-        Date=input("Enter the date of purchase (dd/mm/yyyy): ")
-        
-        while True:
-            try:
-                Threshold=int(input("Enter the restock Threshold: "))
-                break
-            except ValueError:
-                print("!! Invalid input. Please enter a whole number for threshold. !!")
-                
-        print("-" * 25)
-        l=[name,Type,Quantity,Date,Threshold]
-        pickle.dump(l,f)
-    f.close()
-    print("\n--- Records added successfully! ---")
-'''
 def display_apparatus(FILE):
     f=open(FILE,'rb')
     print("\n" + "=" * 80)
-    print(" " * 28 + "APPARATUS RECORDS")
+    print(" " * 28 + f"{FILE_TYPE(FILE)} APPARATUS RECORDS")
     print("=" * 80)
     print("{:<20} {:<15} {:<10} {:<15} {:<10}".format("NAME", "TYPE", "QTY", "DATE", "THRESHOLD"))
     print("-" * 80)
@@ -311,21 +278,6 @@ def display_apparatus(FILE):
         f.close()
     print("=" * 80 + "\n")
 
-'''def display_apparatus_physics():
-    f=open(PHYSICS_FILE,'rb')
-    print("\n" + "=" * 80)
-    print(" " * 29 + "PHYSICS APPARATUS RECORDS")
-    print("=" * 80)
-    print("{:<20} {:<15} {:<10} {:<15} {:<10}".format("NAME", "TYPE", "QTY", "DATE", "THRESHOLD"))
-    print("-" * 80)
-    try:
-        while True:
-            l=pickle.load(f)
-            print("{:<20} {:<15} {:<10} {:<15} {:<10}".format(l[0], l[1], l[2], l[3], l[4]))
-    except EOFError:
-        f.close()
-    print("=" * 80 + "\n")
-'''
 def search_apparatus(FILE):
     f=open(FILE,'rb')
     r=input("\nEnter the name of apparatus to be searched: ")
@@ -344,30 +296,10 @@ def search_apparatus(FILE):
     except EOFError:
         f.close()
         if flag==0:
-            print("Apparatus '{}' not found in the records.".format(r))
+            print(f"Apparatus '{}' not found in the {FILE_TYPE(FILE).Title()} records.".format(r))
         print("----------------------\n")
 
-'''def search_apparatus_physics():
-    f=open(PHYSICS_FILE,'rb')
-    r=input("\nEnter the name of apparatus to be searched: ")
-    flag=0
-    print("\n--- SEARCH RESULTS ---")
-    try:
-        while True:
-            l=pickle.load(f)
-            if r.lower()==l[0].lower():
-                print("=" * 60)
-                print("{:<20} {:<15} {:<10} {:<15} {:<10}".format("NAME", "TYPE", "QTY", "DATE", "THRESHOLD"))
-                print("-" * 60)
-                print("{:<20} {:<15} {:<10} {:<15} {:<10}".format(l[0], l[1], l[2], l[3], l[4]))
-                print("=" * 60)
-                flag=1
-    except EOFError:
-        f.close()
-        if flag==0:
-            print("Apparatus '{}' not found in Physics records.".format(r))
-        print("----------------------\n")
-'''
+
 def update_Quantity(FILE):
     fr=open(FILE,"rb")
     fw=open("temp.dat","wb")
@@ -391,39 +323,12 @@ def update_Quantity(FILE):
         fw.close()
         if flag==1:
             print("\n--- Quantity for '{}' successfully modified! ---".format(r))
-            os.remove(CHEM_FILE)
-            os.rename("temp.dat",CHEM_FILE)
+            os.remove(FILE)
+            os.rename("temp.dat",FILE)
         else:
             print("\n--- Apparatus '{}' not found. ---".format(r))
 
-'''def update_Quantity_physics():
-    fr=open(PHYSICS_FILE,"rb")
-    fw=open("temp.dat","wb")
-    flag=0
-    r=input("Enter the apparatus name to modify Quantity: ")
-    try:
-        while True:
-            d=pickle.load(fr)
-            if d[0].lower()==r.lower():
-                print("\n--- Current Quantity: {} ---".format(d[2]))
-                while True:
-                    try:
-                        d[2]=int(input("Enter NEW Quantity: "))
-                        break
-                    except ValueError:
-                        print("!! Invalid input. Please enter a whole number. !!")
-                flag=1
-            pickle.dump(d,fw)
-    except EOFError:
-        fr.close()
-        fw.close()
-        if flag==1:
-            print("\n--- Quantity for '{}' successfully modified! ---".format(r))
-            os.remove(PHYSICS_FILE)
-            os.rename("temp.dat",PHYSICS_FILE)
-        else:
-            print("\n--- Apparatus '{}' not found. ---".format(r))
-'''
+
 def update_apparatus(FILE):
     fr=open(FILE,"rb")
     fw=open("temp.dat","wb")
@@ -456,48 +361,11 @@ def update_apparatus(FILE):
         fw.close()
         if flag==1:
             print("\n--- Record for '{}' successfully modified! ---".format(r))
-            os.remove(CHEM_FILE)
-            os.rename("temp.dat",CHEM_FILE)
+            os.remove(FILE)
+            os.rename("temp.dat",FILE)
         else:
             print("\n--- Apparatus '{}' not found. ---".format(r))
 
-'''def update_apparatus_physics():
-    fr=open(PHYSICS_FILE,"rb")
-    fw=open("temp.dat","wb")
-    flag=0
-    r=input("Enter the apparatus name to modify ALL DETAILS: ")
-    try:
-        while True:
-            d=pickle.load(fr)
-            if d[0].lower()==r.lower():
-                print("\n--- Updating Record for '{}' ---".format(r))
-                while True:
-                    try:
-                        d[2]=int(input("Enter NEW Quantity (Current: {}): ".format(d[2])))
-                        break
-                    except ValueError:
-                        print("!! Invalid input. Please enter a whole number. !!")
-                        
-                d[3]=input("Enter NEW Date (Current: {}): ".format(d[3]))
-                
-                while True:
-                    try:
-                        d[4]=int(input("Enter NEW Threshold (Current: {}): ".format(d[4])))
-                        break
-                    except ValueError:
-                        print("!! Invalid input. Please enter a whole number. !!")
-                flag=1
-            pickle.dump(d,fw)
-    except EOFError:
-        fr.close()
-        fw.close()
-        if flag==1:
-            print("\n--- Record for '{}' successfully modified! ---".format(r))
-            os.remove(PHYSICS_FILE)
-            os.rename("temp.dat",PHYSICS_FILE)
-        else:
-            print("\n--- Apparatus '{}' not found. ---".format(r))
-'''
 def delete_apparatus(FILE):
     fr=open(FILE,"rb")
     fw=open("temp.dat","wb")
@@ -516,38 +384,16 @@ def delete_apparatus(FILE):
         fw.close()
         if flag==1:
             print("\n--- Record for '{}' successfully deleted! ---".format(r))
-            os.remove(CHEM_FILE)
-            os.rename("temp.dat",CHEM_FILE)
+            os.remove(FILE)
+            os.rename("temp.dat",FILE)
         else:
             print("\n--- Apparatus '{}' not found. No records deleted. ---".format(r))
 
-'''def delete_apparatus_physics():
-    fr=open(PHYSICS_FILE,"rb")
-    fw=open("temp.dat","wb")
-    flag=0
-    r=input("Enter the apparatus name to DELETE: ")
-    try:
-        while True:
-            d=pickle.load(fr)
-            if d[0].lower()==r.lower():
-                flag=1
-                print("--- Apparatus '{}' found and marked for deletion. ---".format(r))
-            else:
-                pickle.dump(d,fw)
-    except EOFError:
-        fr.close()
-        fw.close()
-        if flag==1:
-            print("\n--- Record for '{}' successfully deleted! ---".format(r))
-            os.remove(PHYSICS_FILE)
-            os.rename("temp.dat",PHYSICS_FILE)
-        else:
-            print("\n--- Apparatus '{}' not found. No records deleted. ---".format(r))
-'''
+
 def append_apparatus(FILE):
     l=[]
     f=open(FILE,"ab")
-    print("\n--- APPEND APPARATUS ---")
+    print(f"\n--- APPEND {FILE_TYPE(FILE)} APPARATUS ---")
     while True:
         try:
             n=int(input("Enter the number records to be appended: "))
@@ -582,45 +428,6 @@ def append_apparatus(FILE):
     f.close()
     print("\n--- Records appended successfully! ---")
 
-'''def append_apparatus_physics():
-    l=[]
-    f=open(PHYSICS_FILE,"ab")
-    print("\n--- APPEND PHYSICS APPARATUS ---")
-    while True:
-        try:
-            n=int(input("Enter the number records to be appended: "))
-            break
-        except ValueError:
-            print("!! Invalid input. Please enter a whole number. !!")
-            
-    for i in range(n):
-        print("\n--- New Record {} ---".format(i+1))
-        name=input("Enter the name of the apparatus: ")
-        Type="equipment"
-        print("Type set to: equipment")
-        
-        while True:
-            try:
-                Quantity=int(input("Enter the quantity: "))
-                break
-            except ValueError:
-                print("!! Invalid input. Please enter a whole number for quantity. !!")
-                
-        Date=input("Enter the date of purchase (dd/mm/yyyy): ")
-        
-        while True:
-            try:
-                Threshold=int(input("Enter the restock Threshold: "))
-                break
-            except ValueError:
-                print("!! Invalid input. Please enter a whole number for threshold. !!")
-                
-        print("-" * 25)
-        l=[name,Type,Quantity,Date,Threshold]
-        pickle.dump(l,f)
-    f.close()
-    print("\n--- Records appended successfully! ---")
-'''
 def list_chemicals(FILE):
     f=open(FILE,'rb')
     flag=0
@@ -655,7 +462,7 @@ def sort_apparatus(FILE):
     name_list.sort()
     for name in name_list:
         try:
-            fr=open(CHEM_FILE,"rb")
+            fr=open(FILE,"rb")
             while True:
                 l=pickle.load(fr)
                 if name==l[0]:
@@ -663,35 +470,10 @@ def sort_apparatus(FILE):
         except EOFError:
             fr.close()
     fw.close()
-    os.remove(CHEM_FILE)
-    os.rename("temp.dat",CHEM_FILE)
+    os.remove(FILE)
+    os.rename("temp.dat",FILE)
     print("\n--- Chemistry apparatus records sorted by Name. ---")
 
-'''def sort_apparatus_physics():
-    f1=open(PHYSICS_FILE,"rb")
-    fw=open("temp.dat","wb")
-    name_list=[]
-    try:
-        while True:
-            l=pickle.load(f1)
-            name_list.append(l[0])
-    except EOFError:
-        f1.close()
-    name_list.sort()
-    for name in name_list:
-        try:
-            fr=open(PHYSICS_FILE,"rb")
-            while True:
-                l=pickle.load(fr)
-                if name==l[0]:
-                    pickle.dump(l,fw)
-        except EOFError:
-            fr.close()
-    fw.close()
-    os.remove(PHYSICS_FILE)
-    os.rename("temp.dat",PHYSICS_FILE)
-    print("\n--- Physics apparatus records sorted by Name. ---")
-'''
 def check_restock(FILE):
     f=open(FILE,'rb')
     warnings=0
@@ -713,27 +495,7 @@ def check_restock(FILE):
             print("{} WARNING(S) found.".format(warnings))
         print("#" * 50 + "\n")
 
-'''def check_restock_physics():
-    f=open(PHYSICS_FILE,'rb')
-    warnings=0
-    print("\n" + "#" * 50)
-    print(" " * 18 + "RESTOCK CHECK (PHYSICS)")
-    print("#" * 50)
-    try:
-        while True:
-            l=pickle.load(f)
-            if l[2]<l[4]:
-                print("!! WARNING !! {:<20} is running out of stock! Only {} {} left (Threshold: {})".format(l[0], l[2], unit(l[1]), l[4]))
-                warnings+=1
-    except EOFError:
-        f.close()
-        print("#" * 50)
-        if warnings==0:
-            print("All apparatus in adequate amounts.")
-        else:
-            print("{} WARNING(S) found.".format(warnings))
-        print("#" * 50 + "\n")
-'''
+
 def unit(Type):
     if Type.lower()=="equipment" or Type.lower()=="apparatus" or Type.lower()=="specimen":
         return "Nos."
