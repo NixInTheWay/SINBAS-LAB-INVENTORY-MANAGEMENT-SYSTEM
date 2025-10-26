@@ -390,7 +390,7 @@ def search_apparatus(FILE):
     except EOFError:
         f.close()
         if flag==0:
-            print(f"Apparatus '{}' not found in the {Lab_Type.capitalize()} records.".format(r))
+            print(f"Apparatus {r} not found in the {Lab_Type.capitalize()} records.")
         print("----------------------\n")
 
 
