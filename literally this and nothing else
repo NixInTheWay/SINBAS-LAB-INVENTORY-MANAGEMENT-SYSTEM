@@ -6,12 +6,13 @@ CHEM_FILE = "chemistry_apparatus.dat"
 PHYSICS_FILE = "physics_apparatus.dat"
 BIOLOGY_FILE = "biology_apparatus.dat"
 def FILE_TYPE(FILE_NAME):
+    LAB_TYPE="UNKNOWN"
     if FILE_NAME==CHEM_FILE:
         LAB_TYPE="CHEMISTRY"
     elif FILE_NAME==PHYSICS_FILE:
         LAB_TYPE="PHYSICS"
     elif FILE_NAME==BIOLOGY_FILE:
-        LAB_TYPE=="BIOLOGY"
+        LAB_TYPE="BIOLOGY"
     return LAB_TYPE
 def opening_menu():
     print("\n" * 5)
@@ -106,7 +107,7 @@ def User_menu_chemistry():
         elif ch=='4':
             update_Quantity(CHEM_FILE)
         elif ch=='5':
-            change_password(CHEM_FILE)
+            change_password()
         elif ch=='6':
             sort_apparatus(CHEM_FILE)
         elif ch=='7':
@@ -256,7 +257,7 @@ def User_menu_biology():
         elif ch=='4':
             update_Quantity(BIOLOGY_FILE)
         elif ch=='5':
-            change_password(BIOLOGY_FILE)
+            change_password()
         elif ch=='6':
             sort_apparatus(BIOLOGY_FILE)
         elif ch=='7':
@@ -348,21 +349,25 @@ def add_apparatus(FILE):
     print("\n--- Records added successfully! ---")
 
 def display_apparatus(FILE):
+    Lab_Type=FILE_TYPE(FILE)
     f=open(FILE,'rb')
     print("\n" + "=" * 80)
-    print(" " * 28 + f"{FILE_TYPE(FILE)} APPARATUS RECORDS")
+    print(" " * 28 + f"{Lab_Type} APPARATUS RECORDS")
     print("=" * 80)
-    print("{:<20} {:<15} {:<10} {:<15} {:<10}".format("NAME", "TYPE", "QTY", "DATE", "THRESHOLD"))
+    print("NAME", "TYPE", "QTY", "DATE", "THRESHOLD")
     print("-" * 80)
     try:
         while True:
             l=pickle.load(f)
-            print("{:<20} {:<15} {:<10} {:<15} {:<10}".format(l[0], l[1], l[2], l[3], l[4]))
+            print(l[0], l[1], l[2], l[3], l[4])
+    except FileNotFoundError:
+        print(f"--- No records file found for the {Lab_Type.capitalize()} lab. Please add records first. ---")
     except EOFError:
         f.close()
     print("=" * 80 + "\n")
 
 def search_apparatus(FILE):
+    Lab_Type=FILE_TYPE(FILE)
     f=open(FILE,'rb')
     r=input("\nEnter the name of apparatus to be searched: ")
     flag=0
@@ -372,19 +377,22 @@ def search_apparatus(FILE):
             l=pickle.load(f)
             if r.lower()==l[0].lower():
                 print("=" * 60)
-                print("{:<20} {:<15} {:<10} {:<15} {:<10}".format("NAME", "TYPE", "QTY", "DATE", "THRESHOLD"))
+                print(""NAME", "TYPE", "QTY", "DATE", "THRESHOLD")
                 print("-" * 60)
-                print("{:<20} {:<15} {:<10} {:<15} {:<10}".format(l[0], l[1], l[2], l[3], l[4]))
+                print(l[0], l[1], l[2], l[3], l[4])
                 print("=" * 60)
                 flag=1
+    except FileNotFoundError:
+        print(f"--- No records file found for the {Lab_Type.capitalize()} lab. Please add records first. ---")
     except EOFError:
         f.close()
         if flag==0:
-            print(f"Apparatus '{}' not found in the {FILE_TYPE(FILE).Title()} records.".format(r))
+            print(f"Apparatus '{}' not found in the {Lab_Type.capitalize()} records.".format(r))
         print("----------------------\n")
 
 
 def update_Quantity(FILE):
+    Lab_Type=FILE_TYPE(FILE)
     fr=open(FILE,"rb")
     fw=open("temp.dat","wb")
     flag=0
@@ -402,6 +410,8 @@ def update_Quantity(FILE):
                         print("!! Invalid input. Please enter a whole number. !!")
                 flag=1
             pickle.dump(d,fw)
+    except FileNotFoundError:
+        print(f"--- No records file found for the {Lab_Type.capitalize()} lab. Please add records first. ---")
     except EOFError:
         fr.close()
         fw.close()
@@ -414,6 +424,7 @@ def update_Quantity(FILE):
 
 
 def update_apparatus(FILE):
+    Lab_Type=FILE_TYPE(FILE)
     fr=open(FILE,"rb")
     fw=open("temp.dat","wb")
     flag=0
@@ -440,6 +451,8 @@ def update_apparatus(FILE):
                         print("!! Invalid input. Please enter a whole number. !!")
                 flag=1
             pickle.dump(d,fw)
+    except FileNotFoundError:
+        print(f"--- No records file found for the {Lab_Type.capitalize()} lab. Please add records first. ---")
     except EOFError:
         fr.close()
         fw.close()
@@ -463,6 +476,8 @@ def delete_apparatus(FILE):
                 print("--- Apparatus '{}' found and marked for deletion. ---".format(r))
             else:
                 pickle.dump(d,fw)
+    except FileNotFoundError:
+        print(f"--- No records file found for the {Lab_Type.capitalize()} lab. Please add records first. ---")
     except EOFError:
         fr.close()
         fw.close()
@@ -476,8 +491,9 @@ def delete_apparatus(FILE):
 
 def append_apparatus(FILE):
     l=[]
+    Lab_Type=FILE_TYPE(FILE)
     f=open(FILE,"ab")
-    print(f"\n--- APPEND {FILE_TYPE(FILE)} APPARATUS ---")
+    print(f"\n--- APPEND {Lab_Type} APPARATUS ---")
     while True:
         try:
             n=int(input("Enter the number records to be appended: "))
@@ -522,8 +538,10 @@ def list_chemicals(FILE):
         while True:
             l=pickle.load(f)
             if "chemical"==l[1].lower():
-                print("{:<20} | {:<10} | {:<10} {}".format(l[0], l[2], l[3], unit(l[1])))
+                print(l[0], l[2], l[3], unit(l[1]))
                 flag=1
+    except FileNotFoundError:
+        print(f"--- No records file found for the {Lab_Type.capitalize()} lab. Please add records first. ---")
     except EOFError:
         f.close()
         print("-" * 60)
@@ -534,6 +552,7 @@ def list_chemicals(FILE):
         print("=" * 60 + "\n")
             
 def sort_apparatus(FILE):
+    Lab_Type=FILE_TYPE(FILE)
     f1=open(FILE,"rb")
     fw=open("temp.dat","wb")
     name_list=[]
@@ -541,6 +560,8 @@ def sort_apparatus(FILE):
         while True:
             l=pickle.load(f1)
             name_list.append(l[0])
+    except FileNotFoundError:
+        print(f"--- No records file found for the {Lab_Type.capitalize()} lab. Please add records first. ---")
     except EOFError:
         f1.close()
     name_list.sort()
@@ -551,15 +572,18 @@ def sort_apparatus(FILE):
                 l=pickle.load(fr)
                 if name==l[0]:
                     pickle.dump(l,fw)
+        except FileNotFoundError:
+            print(f"--- No records file found for the {Lab_Type.capitalize()} lab. Please add records first. ---")
         except EOFError:
             fr.close()
     fw.close()
     os.remove(FILE)
     os.rename("temp.dat",FILE)
-    print("\n--- Chemistry apparatus records sorted by Name. ---")
+    print("\n--- {Lab_Type.capitalize()} apparatus records sorted by Name. ---")
 
 def check_restock(FILE):
     f=open(FILE,'rb')
+    Lab_Type=FILE_TYPE(FILE)
     warnings=0
     print("\n" + "#" * 50)
     print(" " * 18 + "RESTOCK CHECK ({})".format(FILE))
@@ -568,7 +592,7 @@ def check_restock(FILE):
         while True:
             l=pickle.load(f)
             if l[2]<l[4]:
-                print("!! WARNING !! {:<20} is running out of stock! Only {} {} left (Threshold: {})".format(l[0], l[2], unit(l[1]), l[4]))
+                print("!! WARNING !! {} is running out of stock! Only {} {} left (Threshold: {})".format(l[0], l[2], unit(l[1]), l[4]))
                 warnings+=1
     except EOFError:
         f.close()
