@@ -283,7 +283,7 @@ def Admin_menu_biology():
         print("12. Change Password")
         print("13. Log out / Exit")
         print("-" * 40)
-        choice =input("Enter choice (1-12): ")
+        choice =input("Enter choice (1-13): ")
         if choice == "1":
             add_apparatus(BIOLOGY_FILE)
         elif choice == "2":
@@ -541,7 +541,7 @@ def list_chemicals(FILE):
         while True:
             l=pickle.load(f)
             if "chemical"==l[1].lower():
-                print(l[0],"\t", l[2],"\t", l[3],"\t", unit(l[1]))
+                print(l[0],"\t", l[2],"\t", unit(l[1]),"\t",l[3] )
                 flag=1
     except FileNotFoundError:
         print(f"--- No records file found for the {Lab_Type.capitalize()} lab. Please add records first. ---")
@@ -563,7 +563,7 @@ def list_Specimens(FILE):
         while True:
             l=pickle.load(f)
             if "specimen"==l[1].lower():
-                print(l[0],"\t", l[2],"\t", l[3],"\t", unit(l[1]))
+                print(l[0],"\t", l[2],"\t", unit(l[1]),"\t", l[3])
                 flag=1
     except FileNotFoundError:
         print(f"--- No records file found for the {Lab_Type.capitalize()} lab. Please add records first. ---")
