@@ -277,10 +277,11 @@ def Admin_menu_biology():
         print(" 6. Append Records")
         print(" 7. Update All Record Details")
         print(" 8. List All Chemicals")
-        print(" 9. Check Restock Warnings")
-        print("10. Sort Records by Name")
-        print("11. Change Password")
-        print("12. Log out / Exit")
+        print(" 9. List All Specimens")
+        print("10. Check Restock Warnings")
+        print("11. Sort Records by Name")
+        print("12. Change Password")
+        print("13. Log out / Exit")
         print("-" * 40)
         choice =input("Enter choice (1-12): ")
         if choice == "1":
@@ -300,12 +301,14 @@ def Admin_menu_biology():
         elif choice == "8":
             list_chemicals(BIOLOGY_FILE)
         elif choice == "9":
-            check_restock(BIOLOGY_FILE)
+            list_Specimens(BIOLOGY_FILE)
         elif choice == "10":
-            sort_apparatus(BIOLOGY_FILE)
+            check_restock(BIOLOGY_FILE)
         elif choice == "11":
+            sort_apparatus(BIOLOGY_FILE)
+        elif choice == "12":
             change_password()
-        elif choice== '12':
+        elif choice== '13':
             break
         else:
             print("\n-- Invalid Menu Choice --")
@@ -550,7 +553,28 @@ def list_chemicals(FILE):
         else:
             print("Total chemicals listed above.")
         print("=" * 60 + "\n")
-            
+def list_Specimens(FILE):
+    f=open(FILE,'rb')
+    flag=0
+    print("\n" + "=" * 60)
+    print(" " * 18 + "LIST OF SPECIMENS")
+    print("=" * 60)
+    try:
+        while True:
+            l=pickle.load(f)
+            if "specimen"==l[1].lower():
+                print(l[0],"\t", l[2],"\t", l[3],"\t", unit(l[1]))
+                flag=1
+    except FileNotFoundError:
+        print(f"--- No records file found for the {Lab_Type.capitalize()} lab. Please add records first. ---")
+    except EOFError:
+        f.close()
+        print("-" * 60)
+        if flag==0:
+            print("No specimen found in the database.")
+        else:
+            print("Total specimens listed above.")
+        print("=" * 60 + "\n")            
 def sort_apparatus(FILE):
     Lab_Type=FILE_TYPE(FILE)
     f1=open(FILE,"rb")
