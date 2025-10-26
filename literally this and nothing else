@@ -380,7 +380,7 @@ def search_apparatus(FILE):
             l=pickle.load(f)
             if r.lower()==l[0].lower():
                 print("=" * 60)
-                print(""NAME","\t", "TYPE","\t", "QTY","\t", "DATE","\t", "THRESHOLD")
+                print("NAME","\t", "TYPE","\t", "QTY","\t", "DATE","\t", "THRESHOLD")
                 print("-" * 60)
                 print(l[0],"\t", l[1],"\t", l[2],"\t", l[3],"\t", l[4])
                 print("=" * 60)
