@@ -119,25 +119,25 @@ def Admin_menu_chemistry():
         print("-" * 40)
         choice =input("Enter choice (1-12): ")
         if choice == "1":
-            add_apparatus()
+            add_apparatus(CHEM_FILE)
         elif choice == "2":
-            display_apparatus()
+            display_apparatus(CHEM_FILE)
         elif choice == "3":
-            search_apparatus()
+            search_apparatus(CHEM_FILE)
         elif choice == "4":
-            update_Quantity()
+            update_Quantity(CHEM_FILE)
         elif choice == "5":
-            delete_apparatus()
+            delete_apparatus(CHEM_FILE)
         elif choice == "6":
-            append_apparatus()
+            append_apparatus(CHEM_FILE)
         elif choice == "7":
-            update_apparatus()
+            update_apparatus(CHEM_FILE)
         elif choice == "8":
-            list_chemicals()
+            list_chemicals(CHEM_FILE)
         elif choice == "9":
-            check_restock()
+            check_restock(CHEM_FILE)
         elif choice == "10":
-            sort_apparatus()
+            sort_apparatus(CHEM_FILE)
         elif choice == "11":
             change_password()
         elif choice== '12':
@@ -219,10 +219,10 @@ def Admin_menu_physics():
         else:
             print("\n-- Invalid Menu Choice --")
 
-def add_apparatus():
+def add_apparatus(FILE):
     l=[]
-    f=open(CHEM_FILE,"wb")
-    print("\n--- ADD CHEMISTRY APPARATUS ---")
+    f=open(FILE,"wb")
+    print("\n--- ADD APPARATUS ---")
     while True:
         try:
             n=int(input("Enter the number records to be added: "))
@@ -233,7 +233,7 @@ def add_apparatus():
     for i in range(n):
         print("\n--- Record {} ---".format(i+1))
         name=input("Enter the name of the apparatus: ")
-        Type=input("Enter type (equipment/chemical): ")
+        Type=input("Enter type (equipment/chemical/specimen): ")
         
         while True:
             try:
@@ -257,7 +257,7 @@ def add_apparatus():
     f.close()
     print("\n--- Records added successfully! ---")
 
-def add_apparatus_physics():
+'''def add_apparatus_physics():
     l=[]
     f=open(PHYSICS_FILE,"wb")
     print("\n--- ADD PHYSICS APPARATUS ---")
@@ -295,11 +295,11 @@ def add_apparatus_physics():
         pickle.dump(l,f)
     f.close()
     print("\n--- Records added successfully! ---")
-
-def display_apparatus():
-    f=open(CHEM_FILE,'rb')
+'''
+def display_apparatus(FILE):
+    f=open(FILE,'rb')
     print("\n" + "=" * 80)
-    print(" " * 28 + "CHEMISTRY APPARATUS RECORDS")
+    print(" " * 28 + "APPARATUS RECORDS")
     print("=" * 80)
     print("{:<20} {:<15} {:<10} {:<15} {:<10}".format("NAME", "TYPE", "QTY", "DATE", "THRESHOLD"))
     print("-" * 80)
@@ -311,7 +311,7 @@ def display_apparatus():
         f.close()
     print("=" * 80 + "\n")
 
-def display_apparatus_physics():
+'''def display_apparatus_physics():
     f=open(PHYSICS_FILE,'rb')
     print("\n" + "=" * 80)
     print(" " * 29 + "PHYSICS APPARATUS RECORDS")
@@ -325,9 +325,9 @@ def display_apparatus_physics():
     except EOFError:
         f.close()
     print("=" * 80 + "\n")
-
-def search_apparatus():
-    f=open(CHEM_FILE,'rb')
+'''
+def search_apparatus(FILE):
+    f=open(FILE,'rb')
     r=input("\nEnter the name of apparatus to be searched: ")
     flag=0
     print("\n--- SEARCH RESULTS ---")
@@ -344,10 +344,10 @@ def search_apparatus():
     except EOFError:
         f.close()
         if flag==0:
-            print("Apparatus '{}' not found in Chemistry records.".format(r))
+            print("Apparatus '{}' not found in the records.".format(r))
         print("----------------------\n")
 
-def search_apparatus_physics():
+'''def search_apparatus_physics():
     f=open(PHYSICS_FILE,'rb')
     r=input("\nEnter the name of apparatus to be searched: ")
     flag=0
@@ -367,9 +367,9 @@ def search_apparatus_physics():
         if flag==0:
             print("Apparatus '{}' not found in Physics records.".format(r))
         print("----------------------\n")
-
-def update_Quantity():
-    fr=open(CHEM_FILE,"rb")
+'''
+def update_Quantity(FILE):
+    fr=open(FILE,"rb")
     fw=open("temp.dat","wb")
     flag=0
     r=input("Enter the apparatus name to modify Quantity: ")
@@ -396,7 +396,7 @@ def update_Quantity():
         else:
             print("\n--- Apparatus '{}' not found. ---".format(r))
 
-def update_Quantity_physics():
+'''def update_Quantity_physics():
     fr=open(PHYSICS_FILE,"rb")
     fw=open("temp.dat","wb")
     flag=0
@@ -423,9 +423,9 @@ def update_Quantity_physics():
             os.rename("temp.dat",PHYSICS_FILE)
         else:
             print("\n--- Apparatus '{}' not found. ---".format(r))
-
-def update_apparatus():
-    fr=open(CHEM_FILE,"rb")
+'''
+def update_apparatus(FILE):
+    fr=open(FILE,"rb")
     fw=open("temp.dat","wb")
     flag=0
     r=input("Enter the apparatus name to modify ALL DETAILS: ")
@@ -461,7 +461,7 @@ def update_apparatus():
         else:
             print("\n--- Apparatus '{}' not found. ---".format(r))
 
-def update_apparatus_physics():
+'''def update_apparatus_physics():
     fr=open(PHYSICS_FILE,"rb")
     fw=open("temp.dat","wb")
     flag=0
@@ -497,9 +497,9 @@ def update_apparatus_physics():
             os.rename("temp.dat",PHYSICS_FILE)
         else:
             print("\n--- Apparatus '{}' not found. ---".format(r))
-
-def delete_apparatus():
-    fr=open(CHEM_FILE,"rb")
+'''
+def delete_apparatus(FILE):
+    fr=open(FILE,"rb")
     fw=open("temp.dat","wb")
     flag=0
     r=input("Enter the apparatus name to DELETE: ")
@@ -521,7 +521,7 @@ def delete_apparatus():
         else:
             print("\n--- Apparatus '{}' not found. No records deleted. ---".format(r))
 
-def delete_apparatus_physics():
+'''def delete_apparatus_physics():
     fr=open(PHYSICS_FILE,"rb")
     fw=open("temp.dat","wb")
     flag=0
@@ -543,11 +543,11 @@ def delete_apparatus_physics():
             os.rename("temp.dat",PHYSICS_FILE)
         else:
             print("\n--- Apparatus '{}' not found. No records deleted. ---".format(r))
-
-def append_apparatus():
+'''
+def append_apparatus(FILE):
     l=[]
-    f=open(CHEM_FILE,"ab")
-    print("\n--- APPEND CHEMISTRY APPARATUS ---")
+    f=open(FILE,"ab")
+    print("\n--- APPEND APPARATUS ---")
     while True:
         try:
             n=int(input("Enter the number records to be appended: "))
@@ -558,7 +558,7 @@ def append_apparatus():
     for i in range(n):
         print("\n--- New Record {} ---".format(i+1))
         name=input("Enter the name of the apparatus: ")
-        Type=input("Enter type (equipment/chemical): ")
+        Type=input("Enter type (equipment/chemical/specimen): ")
         
         while True:
             try:
@@ -582,7 +582,7 @@ def append_apparatus():
     f.close()
     print("\n--- Records appended successfully! ---")
 
-def append_apparatus_physics():
+'''def append_apparatus_physics():
     l=[]
     f=open(PHYSICS_FILE,"ab")
     print("\n--- APPEND PHYSICS APPARATUS ---")
@@ -620,9 +620,9 @@ def append_apparatus_physics():
         pickle.dump(l,f)
     f.close()
     print("\n--- Records appended successfully! ---")
-
-def list_chemicals():
-    f=open(CHEM_FILE,'rb')
+'''
+def list_chemicals(FILE):
+    f=open(FILE,'rb')
     flag=0
     print("\n" + "=" * 60)
     print(" " * 18 + "LIST OF CHEMICALS")
@@ -642,8 +642,8 @@ def list_chemicals():
             print("Total chemicals listed above.")
         print("=" * 60 + "\n")
             
-def sort_apparatus():
-    f1=open(CHEM_FILE,"rb")
+def sort_apparatus(FILE):
+    f1=open(FILE,"rb")
     fw=open("temp.dat","wb")
     name_list=[]
     try:
@@ -667,7 +667,7 @@ def sort_apparatus():
     os.rename("temp.dat",CHEM_FILE)
     print("\n--- Chemistry apparatus records sorted by Name. ---")
 
-def sort_apparatus_physics():
+'''def sort_apparatus_physics():
     f1=open(PHYSICS_FILE,"rb")
     fw=open("temp.dat","wb")
     name_list=[]
@@ -691,12 +691,12 @@ def sort_apparatus_physics():
     os.remove(PHYSICS_FILE)
     os.rename("temp.dat",PHYSICS_FILE)
     print("\n--- Physics apparatus records sorted by Name. ---")
-
-def check_restock():
-    f=open(CHEM_FILE,'rb')
+'''
+def check_restock(FILE):
+    f=open(FILE,'rb')
     warnings=0
     print("\n" + "#" * 50)
-    print(" " * 18 + "RESTOCK CHECK (CHEMISTRY)")
+    print(" " * 18 + "RESTOCK CHECK ({})".format(FILE))
     print("#" * 50)
     try:
         while True:
@@ -713,7 +713,7 @@ def check_restock():
             print("{} WARNING(S) found.".format(warnings))
         print("#" * 50 + "\n")
 
-def check_restock_physics():
+'''def check_restock_physics():
     f=open(PHYSICS_FILE,'rb')
     warnings=0
     print("\n" + "#" * 50)
@@ -733,9 +733,9 @@ def check_restock_physics():
         else:
             print("{} WARNING(S) found.".format(warnings))
         print("#" * 50 + "\n")
-
+'''
 def unit(Type):
-    if Type.lower()=="equipment" or Type.lower()=="apparatus":
+    if Type.lower()=="equipment" or Type.lower()=="apparatus" or Type.lower()=="specimen":
         return "Nos."
     elif Type.lower()=="chemical":
         return "Litres"
