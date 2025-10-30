@@ -407,7 +407,19 @@ def update_Quantity(FILE):
                 print("\n--- Current Quantity: {} ---".format(d[2]))
                 while True:
                     try:
-                        d[2]=int(input("Enter NEW Quantity: "))
+                        Change=int(input("Enter change in Quantity: "))
+                        operation=input("Enter Increase or Decrease: ")
+                        if operation.lower()=='increase':
+                            d[2]=d[2]+Change
+                        elif operation.lower()=='decrease':
+                            if d[2]-Change>=0:
+                                d[2]=d[2]-Change
+                            else:
+                                print("!! Invalid input. Please enter a valid quantity. !!")
+                                continue
+                        else:
+                                print("!! Invalid input. Please enter a increase or decrease. !!")
+                                continue
                         break
                     except ValueError:
                         print("!! Invalid input. Please enter a whole number. !!")
@@ -437,13 +449,14 @@ def update_apparatus(FILE):
             d=pickle.load(fr)
             if d[0].lower()==r.lower():
                 print("\n--- Updating Record for '{}' ---".format(r))
+                d[1]=input("Enter NEW Type (Current: {}): ".format(d[1]))
                 while True:
                     try:
                         d[2]=int(input("Enter NEW Quantity (Current: {}): ".format(d[2])))
                         break
                     except ValueError:
                         print("!! Invalid input. Please enter a whole number. !!")
-                        
+
                 d[3]=input("Enter NEW Date (Current: {}): ".format(d[3]))
                 
                 while True:
