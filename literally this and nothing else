@@ -5,6 +5,10 @@ MISTAKE_COUNT = 0
 CHEM_FILE = "chemistry_apparatus.dat"
 PHYSICS_FILE = "physics_apparatus.dat"
 BIOLOGY_FILE = "biology_apparatus.dat"
+HEADER_FORMAT = "{:<20} {:<15} {:<10} {:<15} {:<10}"
+ROW_FORMAT = "{:<20} {:<15} {:<10} {:<15} {:<10}"
+CHEM_ROW_FORMAT = "{:<20} | {:<10} | {:<10} {}"
+SPEC_ROW_FORMAT = "{:<20} | {:<10} | {:<10} {}"
 def FILE_TYPE(FILE_NAME):
     LAB_TYPE="UNKNOWN"
     if FILE_NAME==CHEM_FILE:
@@ -353,20 +357,26 @@ def add_apparatus(FILE):
 
 def display_apparatus(FILE):
     Lab_Type=FILE_TYPE(FILE)
-    f=open(FILE,'rb')
     print("\n" + "=" * 80)
-    print(" " * 28 + f"{Lab_Type} APPARATUS RECORDS")
+    print(" " * (40 - len(Lab_Type)//2 - 14) + f"{Lab_Type} APPARATUS RECORDS") 
     print("=" * 80)
-    print("NAME","\t", "TYPE","\t", "QTY","\t", "DATE","\t", "THRESHOLD")
+    
+    print(HEADER_FORMAT.format("NAME", "TYPE", "QTY", "DATE", "THRESHOLD"))
     print("-" * 80)
+    
     try:
+        # FIX: File open moved inside try block for robust FileNotFoundError handling
+        f=open(FILE,'rb')
         while True:
             l=pickle.load(f)
-            print(l[0],"\t", l[1],"\t", l[2],"\t", l[3],"\t", l[4])
+            # FIX: Applied string formatting for data alignment
+            print(ROW_FORMAT.format(l[0], l[1], l[2], l[3], l[4]))
+        
     except FileNotFoundError:
         print(f"--- No records file found for the {Lab_Type.capitalize()} lab. Please add records first. ---")
     except EOFError:
         f.close()
+        
     print("=" * 80 + "\n")
 
 def search_apparatus(FILE):
@@ -376,15 +386,17 @@ def search_apparatus(FILE):
     flag=0
     print("\n--- SEARCH RESULTS ---")
     try:
+        f=open(FILE,'rb')
         while True:
             l=pickle.load(f)
             if r.lower()==l[0].lower():
                 print("=" * 60)
-                print("NAME","\t", "TYPE","\t", "QTY","\t", "DATE","\t", "THRESHOLD")
+                print(HEADER_FORMAT.format("NAME", "TYPE", "QTY", "DATE", "THRESHOLD"))
                 print("-" * 60)
-                print(l[0],"\t", l[1],"\t", l[2],"\t", l[3],"\t", l[4])
+                print(ROW_FORMAT.format(l[0], l[1], l[2], l[3], l[4]))
                 print("=" * 60)
                 flag=1
+                break
     except FileNotFoundError:
         print(f"--- No records file found for the {Lab_Type.capitalize()} lab. Please add records first. ---")
     except EOFError:
@@ -551,10 +563,11 @@ def list_chemicals(FILE):
     print(" " * 18 + "LIST OF CHEMICALS")
     print("=" * 60)
     try:
+        f=open(FILE,'rb')
         while True:
             l=pickle.load(f)
             if "chemical"==l[1].lower():
-                print(l[0],"\t", l[2],"\t", unit(l[1]),"\t",l[3] )
+            print(CHEM_ROW_FORMAT.format(l[0], l[2], l[3], unit(l[1])))
                 flag=1
     except FileNotFoundError:
         print(f"--- No records file found for the {Lab_Type.capitalize()} lab. Please add records first. ---")
@@ -576,7 +589,7 @@ def list_Specimens(FILE):
         while True:
             l=pickle.load(f)
             if "specimen"==l[1].lower():
-                print(l[0],"\t", l[2],"\t", unit(l[1]),"\t", l[3])
+                print(SPEC_ROW_FORMAT.format(l[0], l[2], l[3], unit(l[1])))
                 flag=1
     except FileNotFoundError:
         print(f"--- No records file found for the {Lab_Type.capitalize()} lab. Please add records first. ---")
