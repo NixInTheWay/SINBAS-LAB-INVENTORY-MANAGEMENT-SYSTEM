@@ -19,7 +19,7 @@ def opening_menu():
     print("=" * 60)
     print("+" * 60)
     print("|" + " " * 58 + "|")
-    print("|" + " " * 10 + "SANBIS LAB INVENTORY MANAGEMENT SYSTEM" + " " * 10 + "|")
+    print("|" + " " * 10 + "SANJAY LAB INVENTORY MANAGEMENT SYSTEM" + " " * 10 + "|")
     print("|" + " " * 58 + "|")
     print("+" * 60)
     print("=" * 60)
